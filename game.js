@@ -40,9 +40,9 @@ function drawWall(x, y, width, height) {
 // Desenhar paredes ao redor do canvas
 function drawWalls() {
     // Parede superior
-    drawWall(0, 0, canvas.width, 10);
+    drawWall(0, 0, canvas.width, 1);
     // Parede inferior
-    drawWall(0, canvas.height - 10, canvas.width, 10);
+    drawWall(0, canvas.height - 1, canvas.width, 1);
     // Parede esquerda
     drawWall(0, 0, 10, canvas.height);
     // Parede direita
@@ -51,7 +51,7 @@ function drawWalls() {
 
 // Função para desenhar a grade
 function drawGrid() {
-    const gridSize = 16; // Tamanho de cada célula da grade
+    const gridSize = 8; // Tamanho de cada célula da grade
     ctx.strokeStyle = '#ccc'; // Cor da grade
 
     for (let x = 0; x <= canvas.width; x += gridSize) {

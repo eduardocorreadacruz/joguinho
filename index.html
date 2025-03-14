@@ -1,33 +1,30 @@
-<!DOCTYPE html>  
-<html lang="pt-BR">  
-<head>  
-    <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <link rel="stylesheet" href="style.css">  
-    <script src="game.js" defer></script>  
-    <title>Jogo Estilo Game Boy</title>  
-</head>  
-<body>  
-    <div class="gameboy">  
-        <canvas id="gameCanvas" width="204" height="204"></canvas>  
-        <div class="buttons">  
-            <div class="d-pad">  
-                <div class="row">  
-                    <button class="button up">↑</button>  
-                </div>  
-                <div class="row">  
-                    <button class="button left">←</button>  
-                    <button class="button right">→</button>  
-                </div>  
-                <div class="row">  
-                    <button class="button down">↓</button>  
-                </div>  
-            </div>  
-            <div style="display: flex; flex-direction: column;">  
-                <button class="button a">A</button>  
-                <button class="button b">B</button>  
-            </div>  
-        </div>  
-    </div>   
-</body>  
-</html>  
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="game.js" defer></script>
+    <title>Jogo Estilo Game Boy</title>
+</head>
+<body>
+    <div class="gameboy">
+        <canvas id="gameCanvas" width="204" height="204"></canvas>
+        <div class="controls">
+            <!-- D-Pad em formato de cruz -->
+            <div class="d-pad">
+                <div class="d-pad-center"></div>
+                <button class="d-pad-button up">↑</button>
+                <button class="d-pad-button down">↓</button>
+                <button class="d-pad-button left">←</button>
+                <button class="d-pad-button right">→</button>
+            </div>
+            <!-- Botões A e B -->
+            <div class="action-buttons">
+                <button class="button b">B</button>
+                <button class="button a">A</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
