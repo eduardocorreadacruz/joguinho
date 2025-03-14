@@ -1,0 +1,60 @@
+body, html {  
+    margin: 0;  
+    padding: 0;  
+    display: flex;  
+    justify-content: center;  
+    align-items: center;  
+    height: 100vh;  
+    background-color: #a8d5ba;  
+}  
+
+.gameboy {  
+    position: relative;  
+    background-color: #FF3D8C;  
+    border-radius: 9px;  
+    padding: 20px;  
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);  
+}  
+
+canvas {  
+    border: 10px solid #000000;  
+    border-radius: 10px;  
+    background-color: #c0d5b9;  
+    image-rendering: pixelated;  
+    margin-right: 15px; /* Espaço entre canvas e D-Pad */  
+}  
+
+.buttons {  
+    display: flex; /* Organiza os botões ao lado do canvas */  
+    align-items: center; /* Centraliza verticalmente */  
+}  
+
+.d-pad {  
+    display: flex;  
+    flex-direction: column; /* Coloca os botões D-Pad em coluna */  
+    align-items: center;   
+    margin-left: 15px; /* Espaço entre canvas e D-Pad */  
+}  
+
+.row {  
+    display: flex;  
+    justify-content: center; /* Centraliza os botões na linha */  
+}  
+
+.button {  
+    background-color: #FF3D8C; /* Cor dos botões */  
+    border: 2px solid #000;  
+    border-radius: 50%; /* Botões redondos */  
+    width: 40px; /* Tamanho dos botões */  
+    height: 40px; /* Tamanho dos botões */  
+    display: flex;  
+    justify-content: center;  
+    align-items: center;  
+    cursor: pointer;  
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);  
+    margin: 5px; /* Espaçamento entre os botões */  
+}  
+
+.button:active {  
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.6);  
+}  
