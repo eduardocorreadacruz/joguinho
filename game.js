@@ -31,6 +31,49 @@ const directionMap = {
     right: 3  // Andando para a direita (linha 3)  
 };  
 
+// Estados do jogo
+let gameState = 'menu'; // Pode ser 'menu', 'playing', ou 'instructions'
+const menuOptions = ['Iniciar Jogo', 'Instruções'];
+let selectedOption = 0; // Índice da opção selecionada
+
+// Função para desenhar o menu
+function drawMenu() {
+    // Fundo do menu
+    ctx.fillStyle = '#c0d5b9';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Título do menu
+    ctx.fillStyle = '#000';
+    ctx.font = '16px "Press Start 2P", cursive';
+    ctx.textAlign = 'center';
+    ctx.fillText('Jogo Game Boy', canvas.width / 2, 50);
+
+    // Opções do menu
+    menuOptions.forEach((option, index) => {
+        if (index === selectedOption) {
+            ctx.fillStyle = '#FF3D8C'; // Cor da opção selecionada
+        } else {
+            ctx.fillStyle = '#000'; // Cor das outras opções
+        }
+        ctx.fillText(option, canvas.width / 2, 100 + index * 30);
+    });
+}
+
+// Função para desenhar as instruções
+function drawInstructions() {
+    ctx.fillStyle = '#c0d5b9';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#000';
+    ctx.font = '12px "Press Start 2P", cursive';
+    ctx.textAlign = 'center';
+    ctx.fillText('Instruções', canvas.width / 2, 50);
+    ctx.fillText('Use o D-Pad para mover', canvas.width / 2, 80);
+    ctx.fillText('Botão A: Ação 1', canvas.width / 2, 110);
+    ctx.fillText('Botão B: Ação 2', canvas.width / 2, 140);
+    ctx.fillText('Pressione B para voltar', canvas.width / 2, 180);
+}
+
 // Função para desenhar uma parede
 function drawWall(x, y, width, height) {
     ctx.fillStyle = 'black';
@@ -124,15 +167,21 @@ function updatePosition() {
 function gameLoop() {  
     ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpa o canvas  
 
-    // Cor de fundo  
-    ctx.fillStyle = "lightgray";  
-    ctx.fillRect(0, 0, canvas.width, canvas.height); // Preenche o fundo  
+    if (gameState === 'menu') {
+        drawMenu(); // Desenha o menu
+    } else if (gameState === 'instructions') {
+        drawInstructions(); // Desenha as instruções
+    } else if (gameState === 'playing') {
+        // Lógica do jogo principal
+        ctx.fillStyle = "lightgray";  
+        ctx.fillRect(0, 0, canvas.width, canvas.height); // Preenche o fundo  
 
-    drawGrid(); // Desenha a grade
-    drawWalls(); // Desenha as paredes
-    updatePosition(); // Atualiza a posição do jogador  
-    updateAnimation(); // Atualiza a animação  
-    drawPlayer(); // Desenha o jogador  
+        drawGrid(); // Desenha a grade
+        drawWalls(); // Desenha as paredes
+        updatePosition(); // Atualiza a posição do jogador  
+        updateAnimation(); // Atualiza a animação  
+        drawPlayer(); // Desenha o jogador  
+    }
 
     requestAnimationFrame(gameLoop); // Repete o loop  
 }  
@@ -143,9 +192,37 @@ spriteSheet.onload = () => {
     gameLoop(); // Inicia a animação  
 };  
 
-// Controles de teclado para mudar a direção e movimento do jogador  
+// Controles de teclado para navegar no menu
+document.addEventListener('keydown', (e) => {
+    if (gameState === 'menu') {
+        if (e.key === 'ArrowUp') {
+            selectedOption = (selectedOption - 1 + menuOptions.length) % menuOptions.length;
+        } else if (e.key === 'ArrowDown') {
+            selectedOption = (selectedOption + 1) % menuOptions.length;
+        }
+    }
+});
+
+// Eventos dos botões A e B
+document.querySelector('.a').addEventListener('click', () => {
+    if (gameState === 'menu') {
+        if (selectedOption === 0) {
+            gameState = 'playing'; // Iniciar jogo
+        } else if (selectedOption === 1) {
+            gameState = 'instructions'; // Mostrar instruções
+        }
+    }
+});
+
+document.querySelector('.b').addEventListener('click', () => {
+    if (gameState === 'instructions') {
+        gameState = 'menu'; // Voltar ao menu
+    }
+});
+
+// Controles de teclado para mover o jogador
 document.addEventListener('keydown', (e) => {  
-    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {  
+    if (gameState === 'playing' && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {  
         player.isMoving = true; // O jogador está se movendo  
 
         switch (e.key) {  
@@ -167,7 +244,7 @@ document.addEventListener('keydown', (e) => {
 
 // Para a animação quando nenhuma tecla de movimento está pressionada  
 document.addEventListener('keyup', (e) => {  
-    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {  
+    if (gameState === 'playing' && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {  
         player.isMoving = false; // Para o movimento  
         player.frameIndex = 0; // Reseta para o primeiro frame quando parado  
     }  
@@ -206,6 +283,86 @@ document.querySelector('.up').addEventListener('touchstart', () => movePlayer('b
 document.querySelector('.down').addEventListener('touchstart', () => movePlayer('front'));
 document.querySelector('.left').addEventListener('touchstart', () => movePlayer('left'));
 document.querySelector('.right').addEventListener('touchstart', () => movePlayer('right'));
+
+document.querySelector('.up').addEventListener('touchend', stopPlayer);
+document.querySelector('.down').addEventListener('touchend', stopPlayer);
+document.querySelector('.left').addEventListener('touchend', stopPlayer);
+document.querySelector('.right').addEventListener('touchend', stopPlayer);
+
+// Função para navegar no menu com as setas do D-Pad
+function navigateMenu(direction) {
+    if (gameState === 'menu') {
+        if (direction === 'up') {
+            selectedOption = (selectedOption - 1 + menuOptions.length) % menuOptions.length;
+        } else if (direction === 'down') {
+            selectedOption = (selectedOption + 1) % menuOptions.length;
+        }
+    }
+}
+
+// Adicionando eventos de clique para os botões do D-Pad
+document.querySelector('.up').addEventListener('mousedown', () => {
+    if (gameState === 'menu') {
+        navigateMenu('up'); // Navega para cima no menu
+    } else if (gameState === 'playing') {
+        movePlayer('back'); // Move o jogador para cima no jogo
+    }
+});
+
+document.querySelector('.down').addEventListener('mousedown', () => {
+    if (gameState === 'menu') {
+        navigateMenu('down'); // Navega para baixo no menu
+    } else if (gameState === 'playing') {
+        movePlayer('front'); // Move o jogador para baixo no jogo
+    }
+});
+
+document.querySelector('.left').addEventListener('mousedown', () => {
+    if (gameState === 'playing') {
+        movePlayer('left'); // Move o jogador para a esquerda no jogo
+    }
+});
+
+document.querySelector('.right').addEventListener('mousedown', () => {
+    if (gameState === 'playing') {
+        movePlayer('right'); // Move o jogador para a direita no jogo
+    }
+});
+
+// Adicionando eventos de soltar para os botões do D-Pad
+document.querySelector('.up').addEventListener('mouseup', stopPlayer);
+document.querySelector('.down').addEventListener('mouseup', stopPlayer);
+document.querySelector('.left').addEventListener('mouseup', stopPlayer);
+document.querySelector('.right').addEventListener('mouseup', stopPlayer);
+
+// Adicionando eventos de toque para dispositivos móveis
+document.querySelector('.up').addEventListener('touchstart', () => {
+    if (gameState === 'menu') {
+        navigateMenu('up'); // Navega para cima no menu
+    } else if (gameState === 'playing') {
+        movePlayer('back'); // Move o jogador para cima no jogo
+    }
+});
+
+document.querySelector('.down').addEventListener('touchstart', () => {
+    if (gameState === 'menu') {
+        navigateMenu('down'); // Navega para baixo no menu
+    } else if (gameState === 'playing') {
+        movePlayer('front'); // Move o jogador para baixo no jogo
+    }
+});
+
+document.querySelector('.left').addEventListener('touchstart', () => {
+    if (gameState === 'playing') {
+        movePlayer('left'); // Move o jogador para a esquerda no jogo
+    }
+});
+
+document.querySelector('.right').addEventListener('touchstart', () => {
+    if (gameState === 'playing') {
+        movePlayer('right'); // Move o jogador para a direita no jogo
+    }
+});
 
 document.querySelector('.up').addEventListener('touchend', stopPlayer);
 document.querySelector('.down').addEventListener('touchend', stopPlayer);
